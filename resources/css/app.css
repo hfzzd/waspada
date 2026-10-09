@@ -1,0 +1,46 @@
+/* Waspada — custom style minimal.
+   Sebagian besar styling memakai utility Tailwind langsung di Blade. */
+
+:root {
+    --brand: #2549eb;
+    --brand-soft: #eef4ff;
+}
+
+/* Font fallback yang rapi bila Inter belum termuat */
+body {
+    font-family: 'Inter', system-ui, 'Segoe UI', sans-serif;
+}
+
+/* Dark mode hooks via class di <html> (di-toggle oleh frontend-interaction) */
+.dark {
+    color-scheme: dark;
+}
+
+/* Badge kategori laporan */
+.badge-kategori {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: var(--brand-soft);
+    color: var(--brand);
+}
+.dark .badge-kategori {
+    background: #1e2f8a;
+    color: #bfd3fe;
+}
+
+/* Kartu hasil verdict */
+.verdict-aman     { border-left: 4px solid #16a34a; }
+.verdict-hatihati { border-left: 4px solid #f59e0b; }
+.verdict-bahaya   { border-left: 4px solid #dc2626; }
+
+/* Animasi halus untuk hasil cek */
+@keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.hasil-masuk {
+    animation: fadeSlideIn 0.25s ease-out;
+}
