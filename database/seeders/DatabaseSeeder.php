@@ -11,15 +11,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Data taxonomy (kategori penipuan, contoh entitas awal) dikerjakan
-        // divisi lain. Struktur seeder disiapkan di sini agar siap dipanggil.
-        //
-        // Contoh penggunaan nanti:
-        // $this->call([
-        //     ScamTaxonomySeeder::class,
-        // ]);
-        //
-        // Contoh data dummy untuk pengembangan lokal:
+        // Data awal: taksonomi penipuan Indonesia + contoh entitas.
+        $this->call([
+            ScamEntitySeeder::class,
+        ]);
+
+        // Contoh data dummy untuk pengembangan lokal (opsional):
         // \App\Models\ScamEntity::factory(20)->create();
         // \App\Models\Report::factory(50)->create();
     }
