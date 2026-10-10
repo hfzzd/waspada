@@ -32,7 +32,7 @@ RUN npm run build
 # ---------------------------------------------------------------------------
 FROM php:8.2-fpm AS app
 
-# Dependensi sistem untuk ekstensi PHP yang dipakai Laravel 11 + MySQL,
+# Dependensi sistem untuk ekstensi PHP yang dipakai Laravel 12 + MySQL,
 # plus procps (untuk `pgrep` di HEALTHCHECK) dan curl (untuk cek HTTP).
 # Pin versi apt-get rapuh di image Debian; pinning dilakukan di level base
 # image php:8.2-fpm.

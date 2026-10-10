@@ -18,7 +18,7 @@ Pengguna dapat mengecek nomor telepon, nomor rekening bank/e-wallet, URL, alamat
 
 | Lapisan      | Teknologi                              |
 |--------------|----------------------------------------|
-| Backend      | Laravel 11 (PHP ^8.2), MySQL / SQLite  |
+| Backend      | Laravel 12 (PHP ^8.2), MySQL / SQLite  |
 | Frontend     | Blade + Tailwind CSS + Alpine.js (PWA)  |
 | Autentikasi  | Laravel Sanctum                        |
 | Testing      | PHPUnit                                |
