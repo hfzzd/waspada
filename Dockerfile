@@ -34,8 +34,9 @@ FROM php:8.2-fpm AS app
 
 # Dependensi sistem untuk ekstensi PHP yang dipakai Laravel 11 + MySQL,
 # plus procps (untuk `pgrep` di HEALTHCHECK) dan curl (untuk cek HTTP).
-# hadolint ignore=DL3008 -- pin versi apt-get rapuh di image Debian;
-# pinning dilakukan di level base image php:8.2-fpm.
+# Pin versi apt-get rapuh di image Debian; pinning dilakukan di level base
+# image php:8.2-fpm.
+# hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
         curl \
