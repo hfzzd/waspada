@@ -1,0 +1,104 @@
+# =============================================================================
+# Waspada — Continuous Integration
+#
+# Trigger: push & pull request ke branch main.
+# Gerbang verifikasi utama proyek ini: VPS tidak punya PHP/composer/Docker,
+# jadi SEMUA verifikasi build & test berjalan di sini.
+#
+# Prinsip: tidak ada step yang dineuter (`|| true` dilarang) — kegagalan
+# step manapun HARUS menggagalkan CI.
+# =============================================================================
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend:
+    name: PHP — composer, test (MySQL 8)
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: waspada_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -u root -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout kode
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: mbstring, pdo_mysql, bcmath, exif, pcntl, gd, zip
+          coverage: none
+
+      - name: Validasi composer.json
+        run: composer validate --strict
+
+      - name: Install dependensi PHP
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Siapkan environment aplikasi
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Jalankan test suite
+        env:
+          # Override nilai sqlite di phpunit.xml -> pakai MySQL service di atas.
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: ${{ job.services.mysql.ports['3306'] }}
+          DB_DATABASE: waspada_test
+          DB_USERNAME: root
+          DB_PASSWORD: root
+        run: php artisan test
+
+  frontend:
+    name: Node — install & build aset
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout kode
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependensi Node
+        # Repo belum punya package-lock.json, jadi pakai `npm install`
+        # (`npm ci` hanya jalan bila lock file ada dan sinkron).
+        run: npm install --no-audit --no-fund
+
+      - name: Build aset (Vite + Tailwind)
+        run: npm run build
+
+  dockerfile-lint:
+    name: Hadolint — lint Dockerfile
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout kode
+        uses: actions/checkout@v4
+
+      - name: Lint Dockerfile dengan hadolint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
