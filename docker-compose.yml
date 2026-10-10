@@ -1,0 +1,91 @@
+# =============================================================================
+# Waspada — orkestrasi lokal: app (Laravel), db (MySQL 8), queue worker.
+#
+# Cara pakai:
+#   cp .env.example .env   # lalu sesuaikan APP_KEY dkk via `php artisan key:generate`
+#   docker compose up -d --build
+#
+# Catatan jaringan: service app/queue menjangkau database lewat hostname `db`
+# (lihat environment DB_HOST di bawah), jadi di .env set DB_HOST=db,
+# DB_PORT=3306, dan samakan DB_DATABASE/DB_USERNAME/DB_PASSWORD dengan
+# nilai default di service db bila tidak memakai variabel ${...} sendiri.
+# =============================================================================
+
+name: waspada
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: waspada-app
+    # Sajikan HTTP via artisan serve di port 8000 (praktis untuk dev/staging).
+    # Untuk produksi, ganti dengan nginx + php-fpm (CMD bawaan image ini
+    # adalah php-fpm yang listen di port 9000).
+    command: php artisan serve --host=0.0.0.0 --port=8000
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      # Cek HTTP nyata ke halaman utama (route /up belum ada di scaffold ini).
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+    networks:
+      - waspada
+
+  db:
+    image: mysql:8
+    container_name: waspada-db
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-waspada}
+      MYSQL_USER: ${DB_USER:-waspada}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootsecret}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-rootsecret}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    networks:
+      - waspada
+
+  queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: waspada-queue
+    command: php artisan queue:work --tries=3 --sleep=3 --timeout=90
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+    depends_on:
+      db:
+        condition: service_healthy
+      app:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - waspada
+
+volumes:
+  mysql-data:
+    name: waspada-mysql-data
+
+networks:
+  waspada:
+    name: waspada
