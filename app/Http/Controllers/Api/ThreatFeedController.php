@@ -29,9 +29,14 @@ class ThreatFeedController extends Controller
 
     /**
      * Detail satu entitas ancaman.
+     *
+     * Hanya entitas berverdict "bahaya" yang boleh diakses publik,
+     * konsisten dengan filter pada index() (WAS-SEC-001).
      */
     public function show(ScamEntity $entity): JsonResponse
     {
+        abort_if($entity->verdict !== 'bahaya', 404);
+
         return response()->json([
             'data' => $entity,
         ]);

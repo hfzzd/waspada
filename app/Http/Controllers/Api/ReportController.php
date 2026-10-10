@@ -65,6 +65,10 @@ class ReportController extends Controller
         $entity->increment('report_count');
         $entity->refresh();
 
+        // Tautkan laporan ke entitasnya (kolom + relasi sudah ada di
+        // skema/model, tetapi sebelumnya tidak pernah diisi).
+        $report->update(['scam_entity_id' => $entity->getKey()]);
+
         $keywords = $this->scorer->extractDangerKeywords(
             $data['description'].' '.$data['value']
         );
@@ -76,6 +80,17 @@ class ReportController extends Controller
                 : 0,
             'danger_keywords' => $keywords,
         ]);
+
+        // Divisi security-audit (WAS-SEC-003): verdict "bahaya" tidak boleh
+        // ditentukan murni dari laporan yang belum terverifikasi — laporan
+        // anonim dapat dipakai untuk memanipulasi skor (pencemaran nama
+        // terhadap nomor yang sah). Entitas tanpa laporan terverifikasi
+        // maksimal berverdict "hati_hati" sampai moderator memverifikasi.
+        if ($scored['verdict'] === 'bahaya'
+            && ! $entity->reports()->where('status', 'verified')->exists()
+        ) {
+            $scored['verdict'] = 'hati_hati';
+        }
 
         $entity->update([
             'risk_score' => $scored['score'],

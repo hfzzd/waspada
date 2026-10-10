@@ -19,7 +19,8 @@ Route::get('/komunitas', function () {
 });
 
 Route::get('/admin', function () {
-    // TODO: lindungi dengan middleware auth + admin (divisi security-audit).
-    // TODO: ambil dari database — Report::pending()->latest()->paginate(20)
-    return view('pages.admin', ['reports' => collect()]);
+    // Divisi security-audit (WAS-SEC-002): halaman moderasi DINONAKTIFKAN
+    // sampai middleware auth + admin diimplementasikan. Jangan biarkan
+    // halaman admin dapat diakses publik.
+    abort(404);
 });
