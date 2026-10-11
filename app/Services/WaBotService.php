@@ -136,17 +136,31 @@ class WaBotService
 
             if ($response->failed()) {
                 Log::warning('WaBotService: gagal mengirim pesan WhatsApp', [
-                    'to' => $to,
+                    // Nomor HP adalah PII — catat versi tersamar saja (W08).
+                    'to' => self::maskPhone($to),
                     'status' => $response->status(),
                     'body' => $response->body(),
                 ]);
             }
         } catch (\Throwable $e) {
             Log::warning('WaBotService: exception saat mengirim pesan WhatsApp', [
-                'to' => $to,
+                'to' => self::maskPhone($to),
                 'error' => $e->getMessage(),
             ]);
         }
+    }
+
+    /**
+     * Samarkan nomor HP untuk log (W08): hanya awalan + 2 digit akhir.
+     */
+    protected static function maskPhone(string $phone): string
+    {
+        $len = strlen($phone);
+        if ($len <= 6) {
+            return '****';
+        }
+
+        return substr($phone, 0, 4).'****'.substr($phone, -2);
     }
 
     /**
