@@ -21,19 +21,23 @@ class WaWebhookController extends Controller
     /**
      * Verifikasi webhook oleh Meta: cocokkan hub.verify_token dengan
      * token yang kita daftarkan (WA_VERIFY_TOKEN).
+     *
+     * Catatan: PHP mengubah titik pada nama parameter query menjadi
+     * underscore (hub.mode -> hub_mode), baik di $_GET produksi maupun
+     * parse_str() saat testing — jadi baca dengan underscore.
      */
     public function verify(Request $request): Response
     {
         // Fail-closed (W09): token kosong = tolak, jangan pernah echo challenge.
         $expected = (string) config('waspada.wa_verify_token');
         if ($expected === ''
-            || $request->query('hub.mode') !== 'subscribe'
-            || ! hash_equals($expected, (string) $request->query('hub.verify_token'))
+            || $request->query('hub_mode') !== 'subscribe'
+            || ! hash_equals($expected, (string) $request->query('hub_verify_token'))
         ) {
             return response('Forbidden', 403);
         }
 
-        return response((string) $request->query('hub.challenge'), 200)
+        return response((string) $request->query('hub_challenge'), 200)
             ->header('Content-Type', 'text/plain');
     }
 
