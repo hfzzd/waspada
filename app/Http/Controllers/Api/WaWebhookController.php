@@ -24,17 +24,17 @@ class WaWebhookController extends Controller
      */
     public function verify(Request $request): Response
     {
-        if ($request->query('hub.mode') === 'subscribe'
-            && hash_equals(
-                (string) env('WA_VERIFY_TOKEN'),
-                (string) $request->query('hub.verify_token')
-            )
+        // Fail-closed (W09): token kosong = tolak, jangan pernah echo challenge.
+        $expected = (string) env('WA_VERIFY_TOKEN');
+        if ($expected === ''
+            || $request->query('hub.mode') !== 'subscribe'
+            || ! hash_equals($expected, (string) $request->query('hub.verify_token'))
         ) {
-            return response((string) $request->query('hub.challenge'), 200)
-                ->header('Content-Type', 'text/plain');
+            return response('Forbidden', 403);
         }
 
-        return response('Forbidden', 403);
+        return response((string) $request->query('hub.challenge'), 200)
+            ->header('Content-Type', 'text/plain');
     }
 
     /**
