@@ -93,12 +93,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function showResult(data) {
-    const meta = VERDICT_META[data.verdict] || { label: String(data.verdict || "?").toUpperCase(), cls: "" };
+    // API mengembalikan {data: {verdict, explanation, ...}} — normalisasi dulu.
+    const payload = (data && data.data) || {};
+    const meta = VERDICT_META[payload.verdict] || { label: String(payload.verdict || "?").toUpperCase(), cls: "" };
     badgeEl.textContent = meta.label;
     badgeEl.className = "badge " + meta.cls;
 
     reasonsEl.innerHTML = "";
-    const reasons = Array.isArray(data.reasons) ? data.reasons : [];
+    const reasons = Array.isArray(payload.reasons)
+      ? payload.reasons
+      : (payload.explanation ? [payload.explanation] : []);
     if (reasons.length === 0) {
       const li = document.createElement("li");
       li.textContent = "Tidak ada alasan tambahan dari server.";
