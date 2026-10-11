@@ -25,7 +25,7 @@ class WaWebhookController extends Controller
     public function verify(Request $request): Response
     {
         // Fail-closed (W09): token kosong = tolak, jangan pernah echo challenge.
-        $expected = (string) env('WA_VERIFY_TOKEN');
+        $expected = (string) config('waspada.wa_verify_token');
         if ($expected === ''
             || $request->query('hub.mode') !== 'subscribe'
             || ! hash_equals($expected, (string) $request->query('hub.verify_token'))
@@ -79,7 +79,7 @@ class WaWebhookController extends Controller
         $expected = 'sha256='.hash_hmac(
             'sha256',
             $request->getContent(),
-            (string) env('WA_APP_SECRET')
+            (string) config('waspada.wa_app_secret')
         );
 
         return hash_equals($expected, $header);

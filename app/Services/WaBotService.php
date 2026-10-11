@@ -123,9 +123,9 @@ class WaBotService
     {
         try {
             $response = Http::timeout(10)
-                ->withToken((string) env('WA_ACCESS_TOKEN'))
+                ->withToken((string) config('waspada.wa_access_token'))
                 ->post(
-                    'https://graph.facebook.com/v21.0/'.env('WA_PHONE_NUMBER_ID').'/messages',
+                    'https://graph.facebook.com/v21.0/'.config('waspada.wa_phone_number_id').'/messages',
                     [
                         'messaging_product' => 'whatsapp',
                         'to' => $to,

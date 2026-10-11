@@ -22,22 +22,16 @@ class WaWebhookTest extends TestCase
         // Reset rate limiter antar test agar throttle tidak bocor antar test.
         $this->app['cache']->flush();
 
-        putenv('WA_VERIFY_TOKEN=test-verify-token');
-        putenv('WA_APP_SECRET=test-app-secret');
-        putenv('WA_PHONE_NUMBER_ID=test-phone-id');
-        putenv('WA_ACCESS_TOKEN=test-access-token');
+        // Inject kredensial WA via config (idiom Laravel) — putenv() tidak
+        // bisa menimpa $_SERVER yang sudah diisi .env saat boot.
+        config([
+            'waspada.wa_verify_token' => 'test-verify-token',
+            'waspada.wa_app_secret' => 'test-app-secret',
+            'waspada.wa_phone_number_id' => 'test-phone-id',
+            'waspada.wa_access_token' => 'test-access-token',
+        ]);
 
         Http::fake();
-    }
-
-    protected function tearDown(): void
-    {
-        putenv('WA_VERIFY_TOKEN');
-        putenv('WA_APP_SECRET');
-        putenv('WA_PHONE_NUMBER_ID');
-        putenv('WA_ACCESS_TOKEN');
-
-        parent::tearDown();
     }
 
     /**
