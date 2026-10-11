@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\CheckController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\ThreatFeedController;
+use App\Http\Controllers\Api\WaWebhookController;
 use Illuminate\Support\Facades\Route;
 
 // ---------------------------------------------------------------------------
@@ -29,3 +30,17 @@ Route::get('/threat-feed', [ThreatFeedController::class, 'index'])
 
 Route::get('/threat-feed/{entity}', [ThreatFeedController::class, 'show'])
     ->middleware('throttle:120,60');
+
+// ---------------------------------------------------------------------------
+// WhatsApp bot (Meta Cloud API)
+//
+//   GET  /api/wa/webhook : verifikasi langganan webhook (hub.challenge).
+//   POST /api/wa/webhook : terima pesan masuk, diverifikasi dengan
+//                          X-Hub-Signature-256 (HMAC-SHA256).
+// ---------------------------------------------------------------------------
+
+Route::get('/wa/webhook', [WaWebhookController::class, 'verify'])
+    ->middleware('throttle:120,1');
+
+Route::post('/wa/webhook', [WaWebhookController::class, 'receive'])
+    ->middleware('throttle:120,1');
