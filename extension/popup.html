@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Waspada — Cek Penipuan</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <img src="icons/icon48.svg" alt="Waspada" class="logo" />
+      <h1>Waspada</h1>
+    </header>
+
+    <p class="label">URL halaman ini:</p>
+    <p id="currentUrl" class="url" title="">Memuat…</p>
+
+    <button id="checkBtn" class="btn">Cek Keamanan</button>
+
+    <div id="result" class="result hidden">
+      <div id="verdictBadge" class="badge">—</div>
+      <ul id="reasonsList" class="reasons"></ul>
+    </div>
+
+    <p id="error" class="error hidden"></p>
+
+    <footer class="footer">
+      <a href="#" id="openOptions">⚙️ Opsi (API base URL)</a>
+    </footer>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

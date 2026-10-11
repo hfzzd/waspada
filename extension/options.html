@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Opsi — Waspada</title>
+  <style>
+    body {
+      font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 14px;
+      color: #1f2937;
+      background: #f9fafb;
+      margin: 0;
+      padding: 24px;
+      max-width: 520px;
+    }
+    h1 {
+      font-size: 20px;
+      color: #065f46;
+      margin: 0 0 16px;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    input[type="url"], input[type="text"] {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+    .hint {
+      margin: 8px 0 16px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #059669;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #047857;
+    }
+    #status {
+      margin-top: 12px;
+      font-size: 13px;
+      color: #059669;
+      min-height: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>⚙️ Opsi Waspada</h1>
+
+  <label for="apiBase">API base URL server Waspada</label>
+  <input type="text" id="apiBase" placeholder="http://localhost:8000" spellcheck="false" />
+  <p class="hint">
+    Alamat server API Waspada, misalnya <code>http://localhost:8000</code> untuk
+    pengembangan lokal atau <code>https://waspada.example.com</code> untuk server
+    produksi. Tanpa garis miring di akhir.
+  </p>
+
+  <button id="saveBtn" class="btn">Simpan</button>
+  <p id="status"></p>
+
+  <script src="options.js"></script>
+</body>
+</html>
