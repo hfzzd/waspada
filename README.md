@@ -2,16 +2,16 @@
 
 **Waspada** adalah platform intelijen penipuan (*scam intelligence*) open-source untuk Indonesia.
 
-Pengguna dapat mengecek nomor telepon, nomor rekening bank/e-wallet, URL, alamat email, dan isi pesan WhatsApp/SMS — lalu menerima verdict **AMAN / HATI-HATI / BAHAYA** beserta penjelasan dalam Bahasa Indonesia. Laporan dari komunitas dikurasi lewat moderasi dan dipublikasikan sebagai *threat feed* terbuka yang bisa dikonsumsi aplikasi lain maupun ekstensi browser.
+Pengguna dapat mengecek nomor telepon, nomor rekening bank/e-wallet, URL, alamat email, dan isi pesan WhatsApp/SMS — lalu menerima verdict **AMAN / HATI-HATI / BAHAYA** beserta penjelasannya. Laporan dari komunitas dikurasi lewat moderasi dan dipublikasikan sebagai *threat feed* terbuka yang bisa dikonsumsi aplikasi lain maupun ekstensi browser.
 
-> Misi kami sederhana: bikin satu tempat rujukan yang bisa dipercaya sebelum kamu transfer uang atau klik tautan yang mencurigakan. 💚
+> Misi kami sederhana: bikin satu tempat rujukan yang bisa dipercaya sebelum kamu transfer uang atau klik tautan yang mencurigakan.
 
 ## ✨ Fitur
 
 - **Pengecekan instan** — tempel nomor/URL/rekening/pesan, dapatkan verdict + penjelasan dalam hitungan detik (`POST /api/check`).
 - **Laporan komunitas** — siapa pun bisa melaporkan modus penipuan baru lengkap dengan kategori dan bukti (`POST /api/reports`).
 - **Threat feed publik** — daftar entitas berbahaya dalam format JSON terbuka, siap dikonsumsi ekstensi browser atau aplikasi pihak ketiga (`GET /api/threat-feed`).
-- **Penjelasan berbahasa Indonesia** — setiap verdict disertai alasan yang mudah dipahami, bukan sekadar skor angka.
+- **Penjelasan berbahasa Indonesia** — setiap verdict disertai alasan yang mudah dipahami.
 - **Taksonomi penipuan Indonesia** — 10 kategori modus penipuan lokal yang terdokumentasi (lihat `docs/TAKSONOMI_PENIPUAN.md`).
 
 ## 🧰 Stack
@@ -62,7 +62,7 @@ npm run dev
 php artisan serve
 ```
 
-Buka http://localhost:8000 🎉
+Buka http://localhost:8000
 
 ### Menjalankan test
 
@@ -130,7 +130,7 @@ waspada/
 │   └── data/scam_taxonomy.php  # Taksonomi 10 kategori penipuan
 ├── resources/views/            # Layout & komponen Blade
 ├── public/js/waspada.js        # Interaksi frontend (dark mode, checker)
-├── docs/                       # Dokumentasi proyek (kamu sedang membacanya 😄)
+├── docs/                       # Dokumentasi proyek
 └── tests/                      # PHPUnit (unit & feature)
 ```
 
@@ -150,12 +150,9 @@ Waspada mengikuti pola MVC Laravel yang ramping: **Model** (`ScamEntity`, `Repor
 
 ## 🤝 Berkontribusi
 
-Kami senang banget kalau kamu mau ikut membantu! Baca dulu `CONTRIBUTING.md` — intinya: bikin perubahan dalam **commit kecil yang logis**, tulis pesan commit yang jelas, dan ajukan PR untuk direview. 💪
+Kami senang banget kalau kamu mau ikut membantu! Baca dulu `CONTRIBUTING.md` — intinya: bikin perubahan dalam **commit kecil yang logis**, tulis pesan commit yang jelas, dan ajukan PR untuk direview.
 
-## Struktur Tim
-
-Lihat `docs/PROJECT_BRIEF.md` untuk pembagian tugas per divisi (20 agent).
 
 ## 📄 Lisensi
 
-MIT — bebas dipakai untuk kebaikan. 💚
+MIT — bebas dipakai untuk kebaikan.
